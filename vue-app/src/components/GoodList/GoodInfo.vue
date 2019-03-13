@@ -94,6 +94,7 @@
         this.axios.get(url).then(result=>{
            if(result.data.code == 1){
              Toast("添加成功");
+             this.$router.push('home')
            }else{
              Toast("请登录");
            }

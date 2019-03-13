@@ -10,6 +10,7 @@
           placeholder="请输入账号"
           name="uname"
           v-model="uname"
+          autofocus="autofocus"
         >
       </div>
       <div class="mui-input-row">

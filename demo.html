@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./vue.js"></script>
+</head>
+
+<body>
+    <template id="todoItem">
+        <li>{{i+1}} - {{wff}}</li>
+    </template>
+    <script>
+        var todoItem = {
+            template: "#todoItem",
+            data: function () {
+                return {
+
+                }
+            },
+            props: ["wff", "i"]
+        }
+    </script>
+
+    <template id="todoAdd">
+        <div>
+            <input type="text" v-model="newzhaomin"><button @click="ycf()">添加</button>
+        </div>
+    </template>
+    <script>
+        var todoAdd = {
+            template: "#todoAdd",
+            data: function () {
+                return {
+                    newzhaomin: ""
+                }
+            },
+            methods: {
+                ycf() {
+                    this.$emit("ycf", this.newzhaomin);
+                    this.newzhaomin = "";
+                }
+            }
+        }
+    </script>
+    <template id="todolist">
+        <ul>
+            <todo-item v-for="(ycf,i) of wufangfang" :wff="ycf" :i="i" :key="i"></todo-item>
+        </ul>
+    </template>
+    <script>
+        var todoList = {
+            template: "#todolist",
+            data: function () {
+                return {
+
+                }
+            },
+            props: ["wufangfang"],
+            components: {
+                todoItem
+            }
+        }
+    </script>
+
+    <template id="todo">
+        <div>
+            <h1>代办事项</h1>
+            <todo-add @ycf="add_model"></todo-add>
+            <todo-list :wufangfang="wufangfang"></todo-list>
+        </div>
+    </template>
+    <script>
+        Vue.component("todo", {
+            template: "#todo",
+            data: function () {
+                return {
+                    wufangfang: ['吃饭', '睡觉', '打豆豆']
+                }
+            },
+            components: {
+                todoAdd,
+                todoList
+            },
+            methods: {
+                add_model(newzhaomin) {
+                    console.log(newzhaomin);
+                    this.wufangfang.push(newzhaomin);
+                }
+            }
+        })
+    </script>
+    <div id="app">
+        <todo></todo>
+    </div>
+    <script>
+        new Vue({
+            el: "#app",
+            data: {}
+        })
+    </script>
+</body>
+
+</html>

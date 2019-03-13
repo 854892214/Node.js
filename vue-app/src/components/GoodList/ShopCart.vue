@@ -29,13 +29,26 @@
                   </p>
                 </div>
               </a>
+              <form class="mui-input-group">
+                <div class="mui-input-row">
+                  <div class="mui-numbox">
+                    <button
+                      class="mui-btn mui-btn-numbox-minus"
+                      type="button"
+                      @click="minCount(i)"
+                    >-</button>
+                    <input class="mui-input-numbox" type="number" v-model="item.count">
+                    <button class="mui-btn mui-btn-numbox-plus" type="button" @click="addCount(i)">+</button>
+                  </div>
+                </div>
+              </form>
             </li>
           </ul>
         </div>
       </div>
       <div class="mui-card-footer">
         <button @click="removeItem">删除选中商品</button>
-        小计:￥3.00
+        <p>小计:￥{{calcTocalPrice()}}</p>
       </div>
     </div>
   </div>
@@ -49,7 +62,8 @@ export default {
     return {
       list: [],
       cb: false,
-      allcb: false //保存全选复选框状态
+      allcb: false, //保存全选复选框状态
+      sum: 10
     };
   },
   methods: {
@@ -90,13 +104,13 @@ export default {
         var rows = result.data.data;
         //修改全局购物车数量
         this.$store.commit("updateCount", rows.length);
-
         //2:为每一个商品对象添加属性cb 选中状态
         for (var item of rows) {
           item.cb = false;
         }
         //3:将最终数组赋值 list 列表
         this.list = rows;
+        console.log(this.list);
       });
     },
     selectAll(e) {
@@ -154,6 +168,27 @@ export default {
           this.loadMore();
         }
       });
+    },
+    // 指定一个方法 计算合计消费的金额
+    calcTocalPrice() {
+      var sum = 0;
+      var row = this.list;
+      for (var i = 0; i < row.length; i++) {
+        var p = row[i];
+        if (p.cb) {
+          sum += p.price * p.count;
+        }
+      }
+      return sum;
+    },
+    minCount(index) {
+      if (this.list[index].count == 1) {
+        return;
+      }
+      this.list[index].count--;
+    },
+    addCount(index) {
+      this.list[index].count++;
     }
   },
   created() {
