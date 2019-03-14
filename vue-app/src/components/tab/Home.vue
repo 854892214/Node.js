@@ -26,10 +26,12 @@
         </router-link>
       </li>
       <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
-        <a href="#">
-          <img src="../../img/menu4.png">
-          <div class="mui-media-body">支付</div>
-        </a>
+        <router-link to="/OrderConfirm">
+          <a href="#">
+            <img src="../../img/menu4.png">
+            <div class="mui-media-body">支付</div>
+          </a>
+        </router-link>
       </li>
       <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
         <a href="#">
@@ -64,7 +66,7 @@ export default {
       this.axios.get(url).then(res => {
         console.log(res);
         var row = res.data.data;
-        this.$store.commit('updateCount',row.length)
+        this.$store.commit("updateCount", row.length);
       });
     }
   },

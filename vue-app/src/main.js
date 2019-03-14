@@ -10,7 +10,8 @@ Vue.config.productionTip = false
 //import './lib/mui/js/mui.min.js'
 import './lib/mui/css/mui.css'
 import './lib/mui/css/icons-extra.css'
-import { Header, Swipe, SwipeItem, Button } from "mint-ui"
+import './lib/mui/js/mui.min.js'
+import { Header, Swipe, SwipeItem, Button, Popup, Cell, Radio } from "mint-ui"
 Vue.use(vuex)
 var store = new vuex.Store({
   state: {
@@ -35,6 +36,9 @@ Vue.component(Header.name, Header)
 Vue.component(Swipe.name, Swipe)
 Vue.component(SwipeItem.name, SwipeItem)
 Vue.component(Button.name, Button)
+Vue.component(Popup.name, Popup)
+Vue.component(Cell.name, Cell)
+Vue.component(Radio.name, Radio)
 import qs from "qs"
 import axios from "axios"
 Vue.prototype.axios = axios;

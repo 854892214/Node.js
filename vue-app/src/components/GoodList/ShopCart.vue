@@ -1,6 +1,6 @@
 <template>
   <div class="app-cart">
-    <div class="mui-card">
+    <div class="mui-card" v-if="isId&&list.length>0">
       <div class="mui-card-header">
         <h3>购物车列表</h3>
         <h4>
@@ -51,6 +51,13 @@
         <p>小计:￥{{calcTocalPrice()}}</p>
       </div>
     </div>
+    <div v-if="isId==false">
+      <p>抱歉，请您先登录吧</p>
+    </div>
+    <div v-if="list.length==0">
+      <h3>购物车是空的，逛逛去吧！</h3>
+      <button @click="jump">逛逛</button>
+    </div>
   </div>
 </template>
 <script>
@@ -60,13 +67,14 @@ import { Toast } from "mint-ui";
 export default {
   data() {
     return {
-      list: [],
-      cb: false,
+      list: [],     //页面初始化数组
+      cb: false,    //保存单个商品的复选框状态
       allcb: false, //保存全选复选框状态
-      sum: 10
+      isId: true    //判断用户是否登录
     };
   },
   methods: {
+    //删除一项商品
     delItem(e) {
       //e事件对象 e.target 触发事件对象button
       //target.dataset 自定义属性集合
@@ -87,6 +95,7 @@ export default {
         }
       });
     },
+    //页面加载 初始化数据
     loadMore() {
       //1:创建变量保存url
       var url = "http://127.0.0.1:3000/";
@@ -96,6 +105,7 @@ export default {
         //1:判断如果没有登录显示出错消息
         if (result.data.code == -1) {
           Toast("请登录");
+          this.isId = false;
           return;
         }
         //1:2 没有与 vue data双向绑定
@@ -113,6 +123,7 @@ export default {
         console.log(this.list);
       });
     },
+    //点击全选 选中全部商品
     selectAll(e) {
       //全选按钮点击事件
       //1:获取当前全选复选框状态
@@ -124,6 +135,7 @@ export default {
         item.cb = cb;
       }
     },
+    //全选checked判断是否true/false
     modifyItem(e) {
       //修改
       //1:获取当前元素下标[其中一种方式]
@@ -146,6 +158,7 @@ export default {
         this.allcb = false;
       }
     },
+    //删除选中的购物车商品
     removeItem() {
       //0:创建空字符串，为了后续接拼字符串
       var html = "";
@@ -181,14 +194,20 @@ export default {
       }
       return sum;
     },
+    //点击-按钮，购物商品减1
     minCount(index) {
       if (this.list[index].count == 1) {
         return;
       }
       this.list[index].count--;
     },
+    //点击+按钮，购物商品加1
     addCount(index) {
       this.list[index].count++;
+    },
+    //跳转到商品组件
+    jump() {
+      this.$router.push("GoodsList");
     }
   },
   created() {

@@ -7,6 +7,8 @@ import NewsInfo from "./components/NewList/NewsInfo.vue"
 import GoodsList from "./components/GoodList/GoodsList.vue"
 import GoodInfo from "./components/GoodList/GoodInfo.vue"
 import ShopCart from "./components/GoodList/ShopCart.vue"
+import NotFound from "./components/404notfound/notfound.vue"
+import OrderConfirm from "./components/pay/order-confirm.vue"
 Vue.use(Router)
 export default new Router({
     routes: [
@@ -18,6 +20,7 @@ export default new Router({
         { path: '/GoodsList', component: GoodsList },
         { path: '/GoodInfo', component: GoodInfo },
         { path: '/ShopCart', component: ShopCart },
-        { path: '*', component: Login },
+        { path: '/OrderConfirm', component: OrderConfirm },
+        { path: '*', component: NotFound },
     ]
 });
