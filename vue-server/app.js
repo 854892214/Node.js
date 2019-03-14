@@ -42,10 +42,8 @@ app.get("/login", (req, res) => {
             res.send({ code: -1, msg: "用户名或密码有误" });
         } else {
             //将用户登录凭证保存在服务器端 session对象中
-            console.log(result[0])
             var id = result[0].id;//获取当前用户id
             req.session.uid = id; //保存session
-            console.log(req.session.uid);
             res.send({ code: 1, msg: "登录成功" });
         }
     });
@@ -248,7 +246,6 @@ app.get("/delCartItem", (req, res) => {
 app.get("/cartlist", (req, res) => {
     //如果session对象中uid不存在
     //原因:当前没有登录
-    console.log(req.session);
     if (!req.session.uid) {
         res.send({ code: -1, msg: "请登录" });
         return;
