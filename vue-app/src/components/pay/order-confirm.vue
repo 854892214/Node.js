@@ -37,7 +37,7 @@
       </li>
     </ul>
     <!-- 立即支付按钮 -->
-    <div class="mui-content-padded" @click="jumo">
+    <div class="mui-content-padded">
       <button
         type="button"
         class="mui-btn mui-btn-danger mui-btn-block"
@@ -45,6 +45,7 @@
         @click="jump"
       >立即支付</button>
     </div>
+    <!-- 弹出立即支付模态窗 -->
     <mt-popup v-model="popupVisible" @click="!popupVisible" position="bottom" style="width:100%;">
       <div style="height:200px;background:#ddd">
         <div class="paypwd">
@@ -58,16 +59,33 @@
           <span style="font-size:34px">￥588.6</span>
         </div>
         <hr style="width:90%;text-align:center">
-        <div class="paytype">
-          <span>
+        <!-- 弹出支付类型选项 -->
+        <div class="paytype" @click="ShowSel">
+          <p style="font-size:20px">
             <img src="../../img/wx/logo.png" style="width:30px;position:relative;top:5px">
-            零钱
-          </span>
-          <span class="mui-icon mui-icon-arrowright" @click="ShowSel">
+            {{str}}
+          </p>
+          <span class="mui-icon mui-icon-arrowright">
             <mt-popup v-model="popupSel" popup-transition="popup-fade" style="width:90%">
               <mt-radio title="请选择银行卡" v-model="str" :options="list"></mt-radio>
+              <mt-cell title="标题文字"></mt-cell>
+              <mt-cell title="标题文字"></mt-cell>
+              <mt-cell title="标题文字"></mt-cell>
             </mt-popup>
           </span>
+          <div class="password-div">
+            <label for="password" class="password-lable">
+              <ul>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+              </ul>
+              <input id="password" type="password" name="password" maxlength="6">
+            </label>
+          </div>
         </div>
       </div>
     </mt-popup>
@@ -86,14 +104,17 @@ export default {
       list: [
         "邮储银行储蓄卡(7404)",
         "中国银行储蓄卡(0098)",
-        "邮储银行储蓄卡(8019)",
-        "邮储银行储蓄卡(5773)",
+        "兴业银行储蓄卡(8019)",
+        "招商银行储蓄卡(5773)",
+        "建设银行储蓄卡(5773)",
         "使用新卡充值"
       ]
     };
   },
   methods: {
-    jumo() {
+    //点击立即支付按钮
+    jump() {
+      //有后台接口，可以放axios成功后执行关闭
       Indicator.open({
         text: "正在加载...",
         spinnerType: "fading-circle"
@@ -101,18 +122,30 @@ export default {
       setTimeout(() => {
         Indicator.close();
         Toast("加载完成");
+        if (this.str == "") this.str = "零钱";
+        this.popupVisible = !this.popupVisible;
       }, 2000);
-    },
-    jump() {
-      this.popupVisible = !this.popupVisible;
     },
     ShowSel() {
       this.popupSel = !this.popupSel;
     }
+  },
+  watch: {
+    /* popupSel() {
+      //console.log("支付类型", this.popupSel);
+      //this.popupSel = true;
+    }, */
+    popupVisible() {
+      //console.log("支付模态窗", this.popupVisible);
+      this.popupSel = false;
+    },
+    str(val) {
+      this.str = val;
+      //console.log(val);
+    }
   }
 };
 </script>
-
 <style>
 /*跨webview需要手动指定位置*/
 .mui-plus header.mui-bar {

@@ -50,6 +50,9 @@
         <button @click="removeItem">删除选中商品</button>
         <p>小计:￥{{calcTocalPrice()}}</p>
       </div>
+      <div class="mui-card-footer">
+        <button @click="jumpCart">去支付</button>
+      </div>
     </div>
     <div v-if="isId==false">
       <p>抱歉，请您先登录吧</p>
@@ -208,6 +211,10 @@ export default {
     //跳转到商品组件
     jump() {
       this.$router.push("GoodsList");
+    },
+    //跳转到购物车
+    jumpCart(){
+      this.$router.push('OrderConfirm')
     }
   },
   created() {
