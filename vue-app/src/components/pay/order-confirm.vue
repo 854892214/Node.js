@@ -73,19 +73,6 @@
               <mt-cell title="标题文字"></mt-cell>
             </mt-popup>
           </span>
-          <div class="password-div">
-            <label for="password" class="password-lable">
-              <ul>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-              </ul>
-              <input id="password" type="password" name="password" maxlength="6">
-            </label>
-          </div>
         </div>
       </div>
     </mt-popup>
@@ -98,8 +85,8 @@ export default {
   name: "release",
   data() {
     return {
-      popupVisible: false,
-      popupSel: false,
+      popupVisible: false,//控制立即支付按钮的模态窗 的hide
+      popupSel: false,    //控制支付选项的模态窗的hide
       str: "",
       list: [
         "邮储银行储蓄卡(7404)",
