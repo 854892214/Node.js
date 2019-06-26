@@ -2,6 +2,7 @@ const express = require("express");
 const pool = require("./pool");
 const bodyParse = require("body-parser");
 const session = require("express-session");
+const mysql = require('mysql');
 var app = express();
 app.use(session({
     secret: "128位随机字符",//安全字符串
@@ -11,7 +12,7 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 8//保存八小时
     }
 }))
-app.listen(3000, function () { console.log("服务器启动") });
+app.listen(3000);
 app.use(express.static("public"));
 //配置对特殊 json 是否自动转换  不转换
 app.use(bodyParse.urlencoded({
@@ -26,7 +27,14 @@ app.use(cors({
     ],
     credentials: true
 }))
-
+let conn;
+reconn()
+//对所有请求进行拦截
+app.all('*', (req, res,next) => {
+    if(1==1){
+        next();
+    }
+})
 //功能一:用户登录
 app.get("/login", (req, res) => {
     //参数
@@ -48,6 +56,12 @@ app.get("/login", (req, res) => {
         }
     });
 })
+
+function reconn(){
+    conn=mysql.createConnection({pool});
+    conn.on('error',err=>err.code==="PROTOCOL_CONNECTION_LOST"&&setTimeout(reconn,2000))
+
+}
 
 
 //功能七:获取商品详细信息
