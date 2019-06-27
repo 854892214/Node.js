@@ -12,6 +12,8 @@ import './lib/mui/css/mui.css'
 import './lib/mui/css/icons-extra.css'
 import './lib/mui/js/mui.min.js'
 import { Header, Swipe, SwipeItem, Button, Popup, Cell, Radio } from "mint-ui"
+import VueParticles from 'vue-particles'  
+Vue.use(VueParticles)  
 Vue.use(vuex)
 var store = new vuex.Store({
   state: {

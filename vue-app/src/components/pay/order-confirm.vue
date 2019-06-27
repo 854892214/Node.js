@@ -29,7 +29,8 @@
             src="../../img/myCollect/product_img1.png"
             style="height: 73px!important;max-width:81px!important;"
           >
-          <div class="mui-media-body">幸福
+          <div class="mui-media-body">
+            幸福
             <p class="mui-ellipsis">能和心爱的人一起睡觉，是件幸福的事情；可是，打呼噜怎么办？</p>
             <p style="color:red">6808x3</p>
           </div>
@@ -65,16 +66,17 @@
             <img src="../../img/wx/logo.png" style="width:30px;position:relative;top:5px">
             {{str}}
           </p>
-          <span class="mui-icon mui-icon-arrowright">
-            <mt-popup v-model="popupSel" popup-transition="popup-fade" style="width:90%">
-              <mt-radio title="请选择银行卡" v-model="str" :options="list"></mt-radio>
-              <mt-cell title="标题文字"></mt-cell>
-              <mt-cell title="标题文字"></mt-cell>
-              <mt-cell title="标题文字"></mt-cell>
-            </mt-popup>
-          </span>
+          <span class="mui-icon mui-icon-arrowright"></span>
         </div>
       </div>
+    </mt-popup>
+    <!-- 弹出支付类型模态窗 -->
+    <mt-popup
+      v-model="popupSel"
+      popup-transition="popup-fade"
+      style="width:90%"
+    >
+      <mt-radio title="请选择银行卡" v-model="str" :options="list"></mt-radio>
     </mt-popup>
   </div>
 </template>
@@ -85,8 +87,9 @@ export default {
   name: "release",
   data() {
     return {
-      popupVisible: false,//控制立即支付按钮的模态窗 的hide
-      popupSel: false,    //控制支付选项的模态窗的hide
+      popupVisible: false, //控制立即支付按钮的模态窗 的hide
+      popupSel: false, //控制支付选项的模态窗的hide
+      //isOpen: false,//是否支持点击modal关闭modal
       str: "",
       list: [
         "邮储银行储蓄卡(7404)",
