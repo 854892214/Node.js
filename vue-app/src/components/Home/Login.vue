@@ -54,8 +54,8 @@ export default {
             }
             var url = "http://127.0.0.1:3000/login?uname=" + u + "&upwd=" + p;
             this.axios.get(url).then(result => {
-              console.log(result)
                 if (result.data.code == 1) {
+                    this.$store.commit('userId',result.data.data.userId)
                     this.$router.push("/Home");
                 } else {
                     Toast("登录失败,用户名或密码有误！");

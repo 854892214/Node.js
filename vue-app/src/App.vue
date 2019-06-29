@@ -6,12 +6,12 @@
     <!-- 2:占位符用来显示其它的组 55-->
     <router-view></router-view>
     <!-- 3:添加公共组件 Home.vue/tabbar-->
-    <nav class="mui-bar mui-bar-tab">
+    <nav class="mui-bar mui-bar-tab" v-show="isShowTabbar">
         <a class="mui-tab-item mui-active" @click="jump(1)">
             <span class="mui-icon mui-icon-home"></span>
             <span class="mui-tab-label">首页</span>
         </a>
-        <a class="mui-tab-item"  @click="jump(2)">
+        <a class="mui-tab-item" @click="jump(2)">
             <span class="mui-icon mui-icon-contact"></span>
             <span class="mui-tab-label">会员</span>
         </a>
@@ -29,31 +29,45 @@
     </nav>
 </div>
 </template>
+
 <script>
 export default {
-  data(){
-    return{
-
+    data() {
+        return {
+          isShowTabbar:true
+        }
+    },
+    methods: {
+        jump(url) {
+            if (url == 1) {
+                this.$router.push('/home');
+            } else if (url == 3) {
+                this.$router.push('/ShopCart');
+            }
+        }
+    },
+    watch: {
+        $route(to, from) {
+            if(to.path=="/login"){
+              this.isShowTabbar=false
+            }else{
+              this.isShowTabbar=true
+            }
+        }
     }
-  },
-  methods:{
-    jump(url){
-      if(url==1){
-        this.$router.push('/home');
-      }else if(url==3){
-        this.$router.push('/ShopCart');
-      }
-    }
-  }
 }
 </script>
 
 <style>
-.lizi-contaniner{
-  position: absolute;
+.lizi-contaniner {
+    position: absolute;
 }
+
 /* 禁止触发默认的手势操作 */
-* { touch-action: none ; }
+* {
+    touch-action: none;
+}
+
 .app-container {
     padding-bottom: 50px;
     overflow-x: hidden;

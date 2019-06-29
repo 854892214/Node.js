@@ -1,7 +1,7 @@
 <template>
   <div class="app-newslist">
     <ul class="mui-table-view">
-      <li class="mui-table-view-cell mui-media" v-for="item in list" :key="item.id">
+      <li class="mui-table-view-cell mui-media" v-for="item in list" :key="item.id" @click="addClickNum(item.point,item.id)">
         <router-link :to="'/NewsInfo?nid='+item.id">
           <img class="mui-media-object mui-pull-left" :src="item.img_url">
           <div class="mui-media-body">
@@ -33,7 +33,7 @@ export default {
     LoadList() {
       var url = "http://127.0.0.1:3000/imglist";
       this.axios.get(url).then(res => {
-        this.list = res.data.mes;
+        this.list = res.data.msg;
       });
     },
     getMore() {
@@ -47,6 +47,10 @@ export default {
         var rows = this.list.concat(res.data.data);
         this.list = rows;
       });
+    },
+    addClickNum(point,id){
+      let url="http://127.0.0.1:3000/newsInfoClick?point="+point+"&id="+id
+      this.axios.get(url)
     }
     /* add() {} */
   },

@@ -1,8 +1,7 @@
 import Vue from "vue"
 import App from "./App.vue"
 import router from "./router"
-import vuex from "vuex"
-//import "mint-ui"
+import store from "./store/store"
 //1:引入mint-ui 样式文件
 import 'mint-ui/lib/style.css'
 Vue.config.productionTip = false
@@ -13,27 +12,8 @@ import './lib/mui/css/icons-extra.css'
 import './lib/mui/js/mui.min.js'
 import { Header, Swipe, SwipeItem, Button, Popup, Cell, Radio } from "mint-ui"
 import VueParticles from 'vue-particles'  
+import moment from "moment-timezone"
 Vue.use(VueParticles)  
-Vue.use(vuex)
-var store = new vuex.Store({
-  state: {
-    CartCount: sessionStorage.getItem('CartCount') || 0
-  },
-  mutations: {
-    increment(state) {
-      state.CartCount++
-    },
-    updateCount(state, count) {
-      state.CartCount = count
-      sessionStorage.setItem("CartCount", count)
-    }
-  },
-  getters: {
-    optCartCount: function (state) {
-      return state.CartCount
-    }
-  }
-})
 Vue.component(Header.name, Header)
 Vue.component(Swipe.name, Swipe)
 Vue.component(SwipeItem.name, SwipeItem)
@@ -44,6 +24,7 @@ Vue.component(Radio.name, Radio)
 import qs from "qs"
 import axios from "axios"
 Vue.prototype.axios = axios;
+Vue.prototype.moment=moment;
 //6:配置跨域访问保存session
 axios.defaults.withCredentials = true;
 Vue.prototype.qs = qs;

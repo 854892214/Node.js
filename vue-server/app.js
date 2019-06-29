@@ -22,18 +22,17 @@ app.use(bodyParse.urlencoded({
 const cors = require("cors");
 app.use(cors({
     origin: [
-        "http://127.0.0.1:8080",
-        "http://localhost:8080"
+        "http://127.0.0.1:8081",
+        "http://localhost:8081",
+        "http://192.168.1.23:8080",
     ],
     credentials: true
 }))
 let conn;
 reconn()
 //对所有请求进行拦截
-app.all('*', (req, res,next) => {
-    if(1==1){
-        next();
-    }
+app.all('*', (req, res, next) => {
+    next()
 })
 //功能一:用户登录
 app.get("/login", (req, res) => {
@@ -52,17 +51,10 @@ app.get("/login", (req, res) => {
             //将用户登录凭证保存在服务器端 session对象中
             var id = result[0].id;//获取当前用户id
             req.session.uid = id; //保存session
-            res.send({ code: 1, msg: "登录成功" });
+            res.send({ code: 1, msg: "登录成功", data: { userId: id } });
         }
     });
 })
-
-function reconn(){
-    conn=mysql.createConnection({pool});
-    conn.on('error',err=>err.code==="PROTOCOL_CONNECTION_LOST"&&setTimeout(reconn,2000))
-
-}
-
 
 //功能七:获取商品详细信息
 app.get("/findProduct", (req, res) => {
@@ -98,7 +90,20 @@ app.get("/imglist", (req, res) => {
     var sql = "select id,title,img_url ,ctime,point FROM xz_news LIMIT ?,?;";
     pool.query(sql, [offset, PageSize], (err, result) => {
         if (err) throw err;
-        res.send({ code: 1, mes: result });
+        res.send({ code: 200, msg: result, res_message: "SUCCESS", res_code: "ok" });
+    })
+})
+//新闻点击次数+1
+app.get('/newsInfoClick', (req, res) => {
+    let point = +req.query.point;
+    let id = +req.query.id;
+    point = point + 1
+    id = +(id)
+    var sql = "update xz_news set point=? where id = ?";
+    //update xz_news set point=2 where id =1
+    pool.query(sql, [point, id], (err, result) => {
+        if (err) throw err;
+        res.send({ res_message: "SUCCESS", res_code: "ok" })
     })
 })
 app.get("/newslist", (req, res) => {
@@ -140,6 +145,7 @@ app.post("/addcomment", (req, res) => {
     //2:获取二个参数 nid content
     var nid = req.body.nid;        //新闻编号
     var content = req.body.content;//评论内容
+    var ctime = req.body.ctime;
     //3:创建sql语句
     var sql = "INSERT INTO xz_comment VALUES";
     sql += "(null,?,now(),?)";
@@ -204,7 +210,7 @@ app.get("/products", (req, res) => {
         res.send({ code: 1, data: result });
     })
 });
-
+//购物车添加
 app.get("/addcart", (req, res) => {
     //0:判断用户是否登录
     if (!req.session.uid) {
@@ -212,6 +218,7 @@ app.get("/addcart", (req, res) => {
         return;
     }
     //1:参数 pid count uid price
+    var count = req.query.count
     var pid = parseInt(req.query.pid);
     //var count = 1;
     var uid = req.session.uid;
@@ -222,11 +229,12 @@ app.get("/addcart", (req, res) => {
     pool.query(sql, [uid, pid], (err, result) => {
         if (err) throw err;
         if (result.length == 0) {
+            //  select * from xz_cart;
             var sql = ` INSERT INTO xz_cart`;
-            sql += ` VALUES(null,1,${price},${pid},${uid})`;
+            sql += ` VALUES(null,${count},${price},${pid},${uid})`;
         } else {
             var sql = ` UPDATE xz_cart`;
-            sql += ` SET count=count+1 WHERE pid=${pid}`;
+            sql += ` SET count=count+${count} WHERE pid=${pid}`;
             sql += ` AND uid = ${uid}`;
         }
         pool.query(sql, (err, result) => {
@@ -296,3 +304,61 @@ app.get("/removeMItem", (req, res) => {
     })
     //4:请求地址格式
 });
+
+
+var async = {};
+Object.defineProperty(async, 'data', {
+    get: function () {
+        return data;
+    },
+    set: function (newValue) {
+        data = newValue;
+        console.log('set :', newValue);
+        if (newValue == true) {
+            console.log(222)
+            selCart(async.uid);
+        }
+    }
+})
+function selCart(uid) {
+    //参数 uid   
+    // var uid = req.session.uid;
+    console.log(uid)
+    //sql  多表查询
+    var sqlCart = " SELECT c.id,c.count,c.price,";
+    sqlCart += " c.uid,c.pid,l.lname";
+    sqlCart += " FROM xz_cart c,xz_laptop l";
+    sqlCart += " WHERE l.lid = c.pid";
+    sqlCart += " AND c.uid = ?";
+    pool.query(sqlCart, [uid], (err, result) => {
+        if (err) throw err;
+        async.data=result
+        // async.send({data:async.data,res_message:"SUCCESS"})
+        // res.send({ res_message: "SUCCESS", res_code: "ok", data: result })
+    })
+}
+//修改购物车数据
+app.post("/updateCart", (req, res) => {
+    var uid = req.query.uid;
+    async.send=res.send();
+    async.uid=req.query.uid;
+    let pidList = req.body.pid;
+    let countList = req.body.count;
+    for (let i = 0; i < pidList.length; i++) {
+        let pid, count;
+        pid = pidList[i]
+        count = countList[i]
+        let sql = "update xz_cart set count = ? where uid = ? and pid = ?";
+        pool.query(sql, [parseInt(count), +uid, parseInt(pid)], (err, result) => {
+            if (err) throw err;
+            if (i == pidList.length - 1) {
+                async.data = true
+            }
+        })
+    }
+})
+//断线重连机制
+function reconn() {
+    conn = mysql.createConnection({ pool });
+    conn.on('error', err => err.code === "PROTOCOL_CONNECTION_LOST" && setTimeout(reconn, 2000))
+}

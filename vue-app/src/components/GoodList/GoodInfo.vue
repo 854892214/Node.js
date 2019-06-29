@@ -68,7 +68,6 @@
             this.info=result.data.data[0];
             //console.log(this.info);
           });
-
       },
       getImages(){
          var url = "http://127.0.0.1:3000/imageList";
@@ -85,12 +84,14 @@
         var pid = this.pid;
         var price = this.info.price;
         var uid = 1;
-        console.log(pid+"_"+price+"_"+uid);
+        var count =this.val
+        console.log(pid+"_"+price+"_"+uid+"_"+count);
         //2:发送ajax请示
         var url = "http://127.0.0.1:3000/";
         url+="addcart?pid="+pid;
         url+="&price="+price;
         url+="&uid="+uid;
+        url+="&count="+count
         this.axios.get(url).then(result=>{
            if(result.data.code == 1){
              Toast("添加成功");
@@ -106,6 +107,9 @@
     //2:注册子组件
     components:{
       "swiper-box":swiperBox
+    },
+    destroyed:function(){
+      
     }
   }
   //        练习:为+绑定点击事件  数量加一

@@ -64,7 +64,6 @@ export default {
     LoadMore() {
       var url = "http://127.0.0.1:3000/cartlist";
       this.axios.get(url).then(res => {
-        console.log(res);
         var row = res.data.data;
         this.$store.commit("updateCount", row.length);
       });

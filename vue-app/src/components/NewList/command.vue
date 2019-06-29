@@ -6,15 +6,21 @@
       <div class="mui-card-header"></div>
       <div class="mui-card-content">
         <div class="mui-card-content-inner">
-          <textarea placeholder="请吐槽最多120个字" maxlength="120" v-model="msg"></textarea>
+          <textarea placeholder="请吐槽最多120个字" maxlength="120" v-model="msg" style="font-size: 15px;"></textarea>
           <mt-button size="large" type="primary" @click="addcomment">发表评论</mt-button>
         </div>
       </div>
       <div class="mui-card-footer">
         <div class="cmt-list">
-          <div class="cmt-item" v-for="(item,i) in list" :key="item.id">
-            <div>第{{i+1}}楼 发表时间:{{item.ctime | dateFilter}}</div>
-            <div>{{item.content}}</div>
+          <div class="cmt-item" v-for="(item,i) in list" :key="item.id" v-show="list.length!=0">
+            <div>
+              <span>第{{i+1}}楼 发表时间:</span>
+              <span class="show-time">{{moment(item.ctime).format('YYYY-MM-DD HH:mm:ss')}}</span>
+            </div>
+            <div class="cmt-content">{{item.content}}</div>
+          </div>
+          <div v-show="list.length==0">
+            <p style="text-align:center;">暂无评论</p>
           </div>
         </div>
       </div>
@@ -60,7 +66,8 @@ export default {
       //stringify 将 js对象转换查询字符串
       var postData = this.qs.stringify({
         nid: nid,
-        content: this.msg
+        content: this.msg,
+        ctime:this.moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
       });
       //2:发送post 请求         测试
       var url = "http://127.0.0.1:3000/";
@@ -95,4 +102,13 @@ export default {
 };
 </script>
 <style>
+.cmt-list{
+  width: 100%;
+}
+.show-time{
+  float: right;
+}
+.cmt-content{
+  text-indent: 8px;
+}
 </style>
