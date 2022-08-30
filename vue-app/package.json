@@ -9,7 +9,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "mint-ui": "^2.2.9",
-    "moment-timezone": "^0.5.25",
+    "moment-timezone": "^0.5.35",
     "qs": "^6.7.0",
     "vue": "^2.5.16",
     "vue-particles": "^1.0.9",
